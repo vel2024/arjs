@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>AR.js with Two Image Targets</title>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+
+<style>
+    .showbtn:hover{transform: scale(1.05);}
+    .hidebtn:hover{transform: scale(1.05);}
+</style>
+
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+<!-- AR.js Scene Begin -->
+<a-scene 
+embedded 
+arjs="trackingMethod: best; sourcetype: webcam; debugUIEnabled: false;">
+    
+    <a-entity 
+    id="gltf-model"
+    gltf-model="assets/models/chuck.glb"
+    scale="0.4 0.4 0.4"
+    position="0 0 -5"
+    visible="false"
+    >
+    </a-entity>
+
+    <a-camera></a-camera>
+
+</a-scene>
+<img src="assets/images/show-n.png" id="show" alt="Show model" class="showbtn" style="position: absolute; top: 10px; left: 10px; z-index: 10; width: 100px; cursor: pointer;">
+    
+
+
+<img src="assets/images/hide-n.png" id="hide" alt="Hide model" class="hidebtn" style="position: absolute; top: 50px; left: 10px; z-index: 10; width: 100px; cursor: pointer;">
+    
+<!-- AR.js Scene End-->
+
+<script>
+    const model=document.querySelector('#gltf-model');
+    document.getElementById('show').addEventListener('click', () => {
+        model.setAttribute('visible', true);
+        model.setAttribute('rotation', '0 15 0');
+        model.setAttribute('position', '0 .6 -5');
+    } );
+
+    document.getElementById('hide').addEventListener('click', () => {
+        model.setAttribute('visible', false);
+    } );
+
+
+</script>
+
+</body>
+</html>

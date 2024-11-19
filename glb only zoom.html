@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zoom Functionality</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <a-entity id="gltf-model" gltf-model="url(assets/models/wall floor roof.glb)" scale="1 1 1" position="0 1 -1"></a-entity>
+        <a-entity id="camera" camera position="0 3 10"></a-entity>
+    </a-scene>
+
+    <script>
+        const camera = document.querySelector('#camera');
+        let zoomLevel = 5; // Initial zoom level
+
+        // Zoom in/out using mouse wheel
+        window.addEventListener('wheel', (event) => {
+            zoomLevel += event.deltaY * 0.01; // Adjust sensitivity
+            zoomLevel = Math.max(1, Math.min(zoomLevel, 10)); // Limit zoom range
+            camera.setAttribute('position', `0 1.6 ${zoomLevel}`);
+        });
+
+        
+
+       
+    </script>
+</body>
+</html>

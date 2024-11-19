@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Multi 2D plan Image Targets</title>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+<!-- MindAR for image tracking -->
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<!-- A-Frame Extras for animation mixer -->
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.0/dist/aframe-extras.min.js"></script>
+
+
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+
+<!-- AR.js Scene Begin -->
+<a-scene 
+mindar-image="imageTargetSrc:assets/targets/cat video.mind;"
+embedded 
+arjs="trackingMethod: best; sourcetype: webcam; debugUIEnabled: false;">
+<a-assets>
+<a-asset-item id="building1" src="assets/models/building1.glb"></a-asset-item>
+<a-asset-item id="building2" src="assets/models/building2.glb"></a-asset-item>
+</a-assets>    
+
+<!-- AR.js Entity begin -->
+<a-entity mindar-image-target="targetIndex: 0">
+    <a-gltf-model
+
+    id="gltf-model"
+    src="#building1"
+    scale="0.01 0.01 0.01"
+    position="0 0 0"
+    animation-mixer
+    >
+    </a-gltf-model>
+</a-entity>
+
+<a-entity mindar-image-target="targetIndex: 1">
+    <a-gltf-model
+
+    id="gltf-model"
+    src="#building2"
+    scale="0.00005 0.00005 0.00005"
+    position="0 0 0"
+    animation-mixer
+    >
+    </a-gltf-model>
+</a-entity>
+
+<!-- AR.js Entity end -->
+
+<a-camera></a-camera>
+
+</a-scene>
+<!-- AR.js Scene End-->
+
+<script>
+
+    const modelvar=document.querySelector('#gltf-model');
+    const videovar=document.querySelector('#video');
+    const videosrcvar=document.querySelector('#videosrc');
+    const imagetarget=document.querySelector('[mindar-image-target]');
+    imagetarget.addEventListener('targetFound', () => {
+        modelvar.setAttribute('visible', true); 
+        videovar.setAttribute('visible', true); 
+        videosrcvar.play();
+    }
+ );
+
+    imagetarget.addEventListener('targetLost', () => {
+        modelvar.setAttribute('visible', false);
+        videovar.setAttribute('visible', false);
+    } );
+</script>
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLB Model zoom</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.0/dist/aframe-extras.min.js"></script>
+    <style>
+       
+        .floating-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 240px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .floating-menu:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-menu h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #333;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .floating-menu select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .floating-menu select:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        .color-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            margin: 5px 0;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.2s;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .red-button {
+            background: #FF0000;
+        }
+
+        .green-button {
+            background: #228B22;
+        }
+
+        .blue-button {
+            background: #0000FF;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .color-button:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 480px) {
+            .floating-menu {
+                max-width: 90%;
+                padding: 15px;
+            }
+            .floating-menu h3 {
+                font-size: 18px;
+            }
+            .color-button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a-scene>
+        <!-- Load the GLB model with animations -->
+        <a-entity 
+            id="gltf-model" 
+            gltf-model="url(assets/models/SSAS.glb)"
+            scale="0.5 0.5 0.5"
+            position="0 0 -1"
+            animation-mixer
+            orbit-controls
+            class="color-changeable">
+        </a-entity>
+        
+        <!-- Add a camera to the scene -->
+        <a-entity id="camera" camera position="0 1.6 5" ></a-entity>
+
+        <!-- Optional: Add lighting to make the model look better -->
+        <a-light type="ambient" color="#FFFFFF"></a-light>
+        <a-light type="directional" position="-1 1 1" color="#FFFFFF"></a-light>
+    </a-scene>
+
+    <div class="floating-menu">
+        <h3>Select Object Part</h3>
+        <select id="object-part-selector">
+            <option value="">Select a part</option>
+        </select>
+        <button class="color-button red-button" onclick="replacePartMaterial('#FF0000')">
+            <div class="color-icon" style="background-color: #FF0000;"></div> Red
+            <div class="tooltip">Apply Red Color</div>
+        </button>
+        <button class="color-button green-button" onclick="replacePartMaterial('#228B22')">
+            <div class="color-icon" style="background-color: #228B22;"></div> Green
+            <div class="tooltip">Apply Green Color</div>
+        </button>
+        <button class="color-button blue-button" onclick="replacePartMaterial('#0000FF')">
+            <div class="color-icon" style="background-color: #0000FF;"></div> Blue
+            <div class="tooltip">Apply Blue Color</div>
+        </button>
+    </div>
+
+    <script>
+        const model = document.querySelector('#gltf-model');
+        const objectPartSelector = document.getElementById('object-part-selector');
+        const camera = document.querySelector('#camera');
+        //const camera = document.getElementById('camera');
+        let meshParts = [];
+        //let cameraZoom = 1;  Initial zoom level
+
+        // Traverse through the model and find all mesh parts
+        model.addEventListener('model-loaded', () => {
+            model.object3D.traverse(node => {
+                if (node.isMesh) {
+                    console.log('Part Name:', node.name); // Log each part name to the console
+                    meshParts.push(node); // Collect the mesh parts
+                    const option = document.createElement('option');
+                    option.value = node.uuid; // Use the uuid to uniquely identify each mesh part
+                    option.textContent = node.name || node.uuid; // Display part name or uuid
+                    objectPartSelector.appendChild(option);
+                }
+            });
+        });
+
+        // Function to replace the material of the selected part
+        function replacePartMaterial(color) {
+            const selectedPartUUID = objectPartSelector.value;
+            if (selectedPartUUID) {
+                const selectedPart = meshParts.find(part => part.uuid === selectedPartUUID);
+                if (selectedPart) {
+                    // Check if the part already has a unique material, if not, clone the existing material
+                    if (!selectedPart.material.isUnique) {
+                        selectedPart.material = selectedPart.material.clone();
+                        selectedPart.material.isUnique = true; // Mark this material as unique
+                    }
+                    
+                    // Set the new color while keeping other properties intact
+                    selectedPart.material.color.set(color);
+                    selectedPart.material.emissive.set(color); // Add emissive to make color vibrant
+                    selectedPart.material.emissiveIntensity = 0.5; // Adjust this value to change brightness
+                } else {
+                    console.log('Part not found!');
+                }
+            } else {
+                console.log('No part selected.');
+            }
+        }
+
+        
+
+        // Zoom in/out functionality
+        let zoomlevel = 5;
+        window.addEventListener ('wheel', (event) => {
+            zoomlevel += event.deltaY*0.01;
+            zoomlevel = Math.max (1,Math.min(zoomlevel, 10));
+            camera.setAttribute ('position', '0 1.6 ${zoomlevel}');
+        }
+    );
+
+
+
+
+
+    </script>
+</body>
+</html>

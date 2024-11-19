@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GLB Model color change</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    
+    
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <!-- Buttons to load different GLB models -->
+<div>
+
+    <select id="part0">
+        <option value="">Select a part</option>
+        
+    </select>
+    <button id="red" style="position: absolute; top: 30px; left: 10px; z-index: 10;">
+        Red
+    </button>
+    <button id="green" style="position: absolute; top: 70px; left: 10px; z-index: 10;">
+        Green
+    </button>
+
+</div>
+
+    <a-scene
+        embedded
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    >
+        <!-- Add a static entity with GLB model -->
+        <a-entity
+            id="gltf-model"
+            gltf-model="assets/models/table1.glb" 
+            scale="0.5 0.5 0.5"
+            position="0 0 -5"
+            visible="true"
+            orbit-controls
+        ></a-entity>
+
+        <!-- <a-camera> </a-camera>-->
+    </a-scene>
+
+    <script>
+        // Select the GLB model entity
+        const model = document.querySelector('#gltf-model');
+        const partvar = document.getElementById('part0');
+        let meshpart = [];
+
+        // Add event listener to load Model 1
+        model.addEventListener('model-loaded', ()=> 
+        {
+            model.object3D.traverse (node=>
+            {
+                if (node.isMesh) 
+                {
+                    meshpart.push(node);
+                    const option = document.createElement('option');
+                    option.value = node.uuid;
+                    option.textContent=node.name || node.uuid;
+                    partvar.appenChild(option);
+                }
+            })
+        })
+
+    </script>
+</body>
+</html>

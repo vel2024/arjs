@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Image Targets</title>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+<!-- MindAR for image tracking -->
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<!-- A-Frame Extras for animation mixer -->
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.0/dist/aframe-extras.min.js"></script>
+
+
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+
+<!-- AR.js Scene Begin -->
+<a-scene 
+mindar-image="imageTargetSrc:assets/targets/cattargets.mind;"
+embedded 
+arjs="trackingMethod: best; sourcetype: webcam; debugUIEnabled: false;">
+<a-assets>
+<a-asset-item id="cat" src="assets/models/trotting_cat.glb"></a-asset-item>
+</a-assets>    
+
+<!-- AR.js Entity begin -->
+<a-entity mindar-image-target="targetIndex: 0">
+    <a-gltf-model
+
+    id="gltf-model"
+    src="#cat"
+    scale="0.2 0.2 0.2"
+    position="0 0 1"
+    animation-mixer
+    >
+    </a-gltf-model>
+</a-entity>
+<!-- AR.js Entity end -->
+
+<a-camera></a-camera>
+
+</a-scene>
+<!-- AR.js Scene End-->
+
+<script>
+    const model=document.querySelector('#gltf-model');
+    const imagetarget=document.querySelector('[mindar-image-target]');
+    imagetarget.addEventListener('targetFound', () => {
+        model.setAttribute('visible', true);  
+    } );
+
+    imagetarget.addEventListener('targetLost', () => {
+        model.setAttribute('visible', false);
+    } );
+</script>
+
+</body>
+</html>

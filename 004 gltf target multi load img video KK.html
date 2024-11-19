@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Image Targets</title>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+<!-- MindAR for image tracking -->
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<!-- A-Frame Extras for animation mixer -->
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.0/dist/aframe-extras.min.js"></script>
+
+
+</head>
+
+<body style="margin: 0; overflow: hidden;">
+
+<!-- AR.js Scene Begin -->
+<a-scene 
+mindar-image="imageTargetSrc:assets/targets/abcdmind.mind;"
+embedded 
+arjs="trackingMethod: best; sourcetype: webcam; debugUIEnabled: false;">
+<a-assets>
+<a-asset-item id="aero" src="assets/models/1 aeroplane.glb"></a-asset-item>
+<a-asset-item id="bus" src="assets/models/2 bus2.glb"></a-asset-item>
+<a-asset-item id="car" src="assets/models/3 car.glb"></a-asset-item>
+<a-asset-item id="dyna" src="assets/models/4 dyrannosarus.glb"></a-asset-item>
+</a-assets>    
+
+<!-- AR.js Entity begin -->
+<a-entity mindar-image-target="targetIndex: 0">
+    <a-gltf-model
+
+    id="gltf-model"
+    src="#aero"
+    scale="1 1 1"
+    position="0 0 0"
+    animation-mixer
+    >
+    </a-gltf-model>
+</a-entity>
+
+<a-entity mindar-image-target="targetIndex: 1">
+    <a-gltf-model
+
+    id="gltf-model2"
+    src="#bus"
+    scale="1 1 1"
+    position="0 0 0"
+    animation-mixer
+    >
+    </a-gltf-model>
+</a-entity>
+
+<a-entity mindar-image-target="targetIndex: 2">
+    <a-gltf-model
+
+    id="gltf-model3"
+    src="#car"
+    scale="1 1 1"
+    position="0 0 0"
+    animation-mixer
+    >
+    </a-gltf-model>
+
+
+    <a-entity mindar-image-target="targetIndex: 3">
+        <a-gltf-model
+    
+        id="gltf-model4"
+        src="#dyna"
+        scale="1 1 1"
+        position="0 0 0"
+        animation-mixer
+        >
+        </a-gltf-model>
+
+    </a-entity>
+
+</a-entity>
+
+<!-- AR.js Entity end -->
+
+<a-camera></a-camera>
+
+</a-scene>
+<!-- AR.js Scene End-->
+
+<script>
+
+    const modelvar1=document.querySelector('#gltf-model');
+    const modelvar2=document.querySelector('#gltf-model2');
+    const modelvar3=document.querySelector('#gltf-model3');
+    const modelvar4=document.querySelector('#gltf-model4');
+    const imagetarget=document.querySelector('[mindar-image-target]');
+    imagetarget.addEventListener('targetFound', () => {
+        modelvar1.setAttribute('visible', true); 
+        modelvar2.setAttribute('visible', true); 
+        modelvar3.setAttribute('visible', true); 
+        modelvar4.setAttribute('visible', true); 
+        
+    }
+ );
+
+    imagetarget.addEventListener('targetLost', () => {
+        modelvar1.setAttribute('visible', false);
+        modelvar2.setAttribute('visible', false);
+        modelvar3.setAttribute('visible', false);
+        modelvar4.setAttribute('visible', false);
+    } );
+</script>
+
+</body>
+</html>

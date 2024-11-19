@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Button click Image Targets</title>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+<!-- AR.js Scene Begin -->
+<a-scene 
+embedded 
+arjs="trackingMethod: best; sourcetype: webcam; debugUIEnabled: false;">
+    
+    <a-entity 
+    gltf-model="assets/models/chair2.glb"
+    scale="1 1 1"
+    position="0 1 -3"
+    rotation="0 15 0"
+    >
+
+    </a-entity>
+
+    <a-camera></a-camera>
+</a-scene>
+<!-- AR.js Scene End-->
+
+</body>
+</html>

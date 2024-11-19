@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>AR Image Target with GLB and Audio</title>
+
+    <!-- A-Frame Library -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+    <!-- MindAR for image tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <!-- A-Frame Extras for animation mixer -->
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.0/dist/aframe-extras.min.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+    <!-- Buttons to show and hide the GLB model -->
+    <button id="show-model-btn" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+        Show Model
+    </button>
+    <button id="hide-model-btn" style="position: absolute; top: 50px; left: 10px; z-index: 10;">
+        Hide Model
+    </button>
+
+    <a-scene 
+        mindar-image="imageTargetSrc: assets/nft/targets_ar.mind;" 
+        color-space="sRGB" 
+        renderer="colorManagement: true, physicallyCorrectLights" 
+        vr-mode-ui="enabled: false" 
+        device-orientation-permission-ui="enabled: false">
+
+        <a-assets>
+            <img id="card" src="assets/images/Visitcard.JPEG" />
+            <a-asset-item id="avatarModel" src="assets/models/talking to.glb"></a-asset-item>
+            <audio id="audio-sound" src="assets/audios/AR.mp3" preload="auto"></audio>
+        </a-assets>
+
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-gltf-model 
+              id="gltf-model"
+              rotation="0 0 0" 
+              position="0 0 0.1" 
+              scale="0.30 0.30 0.30"  
+              src="#avatarModel" 
+              visible="false">  <!-- Set initially hidden -->
+            </a-gltf-model>
+        </a-entity>
+    </a-scene>
+
+    <script>
+        // Select the GLB model
+        const model = document.querySelector('#gltf-model');
+        
+        // Add event listener to the show model button
+        document.getElementById('show-model-btn').addEventListener('click', () => {
+            model.setAttribute('visible', true);  // Show the model
+        });
+
+        // Add event listener to the hide model button
+        document.getElementById('hide-model-btn').addEventListener('click', () => {
+            model.setAttribute('visible', false);  // Hide the model
+        });
+    </script>
+</body>
+</html>
+

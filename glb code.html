@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test GLB Model with Animations and Audio</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.0/dist/aframe-extras.min.js"></script>
+    <style>
+       
+        .floating-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 240px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        
+
+       
+
+       
+    </style>
+</head>
+<body>
+    <a-scene>
+        <!-- Load the GLB model with animations -->
+        <a-entity 
+            id="gltf-model" 
+            gltf-model="url(assets/models/table1.glb)"
+            scale="1 1 1"
+            position="0 1 -7"
+            rotation="0 0 0"
+            animation-mixer
+            orbit-controls
+            class="color-changeable">
+        </a-entity>
+        
+        <!-- Add a camera to the scene 
+        <a-entity id="camera" camera position="0 1.6 0" wasd-controls></a-entity>-->
+
+        <!-- Optional: Add lighting to make the model look better -->
+        <a-light type="ambient" color="#FFFFFF"></a-light>
+        <a-light type="directional" position="-1 1 1" color="#FFFFFF"></a-light>
+    </a-scene>
+
+    <div class="floating-menu">
+        <h3>Select Object Part</h3>
+        <select id="object-part-selector">
+            <option value="">Select a part</option>
+        </select>
+        <button >Red
+             <!--<div class="color-icon" style="background-color: #FF0000;"></div> Red
+            <div class="tooltip">Apply Red Color</div>-->
+        </button>
+        <button>Blue
+           
+        </button>
+        <button >Green
+            
+        </button>
+    </div>
+
+    <script>
+        const model = document.querySelector('#gltf-model');
+        const objectPartSelector = document.getElementById('object-part-selector');
+        
+        let meshParts = [];
+       
+
+        // Traverse through the model and find all mesh parts
+        model.addEventListener('model-loaded', () => {
+            model.object3D.traverse(node => {
+                if (node.isMesh) {
+                    console.log('Part Name:', node.name); // Log each part name to the console
+                    meshParts.push(node); // Collect the mesh parts
+                    const option = document.createElement('option');
+                    option.value = node.uuid; // Use the uuid to uniquely identify each mesh part
+                    option.textContent = node.name || node.uuid; // Display part name or uuid
+                    objectPartSelector.appendChild(option);
+                }
+            });
+        });
+
+        
+    </script>
+</body>
+</html>

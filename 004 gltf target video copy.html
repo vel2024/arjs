@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Video Target</title>
+
+    <!-- A-Frame Library -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+    <!-- MindAR for image tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <a-scene 
+        mindar-image="imageTargetSrc: assets/targets/cattargets.mind; maxTrackUpdateRate: 30" 
+        color-space="sRGB" 
+        renderer="colorManagement: true, physicallyCorrectLights" 
+        vr-mode-ui="enabled: false" 
+        device-orientation-permission-ui="enabled: false">
+        
+        <a-assets>
+            <!-- Local video file -->
+            <video id="video" src="assets/videos/video_25fps.mp4" preload="auto" crossorigin="anonymous" loop="false"></video>
+        </a-assets>
+
+        <!-- Camera for AR view -->
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        
+        <!-- AR Video display on detected image target -->
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-video id="videoElement" src="#video" position="0 0 0" rotation="0 0 0" visible="false"></a-video>
+        </a-entity>
+    </a-scene>
+
+    <script>
+        const video = document.querySelector('#video');
+        const videoEntity = document.querySelector('#videoElement');
+
+        // Event: When the target is detected
+        document.querySelector('[mindar-image-target]').addEventListener('targetFound', () => {
+            videoEntity.setAttribute('visible', 'true'); // Show video element on target detection
+            playVideo();
+            adjustVideoSize(0.5, 0.5); // Adjust size as needed
+        });
+
+        // Event: When the target is lost
+        document.querySelector('[mindar-image-target]').addEventListener('targetLost', () => {
+            videoEntity.setAttribute('visible', 'false'); // Hide video element on target loss
+            pauseVideo();
+        });
+
+        function playVideo() {
+            video.play().catch(error => {
+                console.error("Video playback failed:", error);
+            });
+        }
+
+        function pauseVideo() {
+            video.pause();
+        }
+
+        // Adjust video size dynamically
+        function adjustVideoSize(targetWidth, targetHeight) {
+            videoEntity.setAttribute('width', targetWidth);
+            videoEntity.setAttribute('height', targetHeight);
+        }
+    </script>
+
+</body>
+</html>

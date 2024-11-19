@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>AR.js with Two Image Targets</title>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+<!-- MindAR for image tracking -->
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<!-- A-Frame Extras for animation mixer -->
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.0/dist/aframe-extras.min.js"></script>
+
+<style>
+    .showbtn:hover{transform: scale(1.1); box-shadow: 10px 3px 3px rgba(0, 0, 255);}
+    .hidebtn:hover{transform: scale(1.1);}
+</style>
+
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+<!-- AR.js Scene Begin -->
+<a-scene 
+
+embedded 
+arjs="trackingMethod: best; sourcetype: webcam; debugUIEnabled: false;">
+<a-assets>
+<a-asset-item id="cat" src="assets/models/trotting_cat.glb"></a-asset-item>
+</a-assets>    
+    
+<a-entity>
+    <a-gltf-model
+
+    id="gltf-model"
+    src="#cat"
+    scale="0.5 0.5 0.5"
+    position="0 0 -5"
+    visible="false"
+    animation-mixer
+    >
+    </a-gltf-model>
+    </a-entity>
+
+    <a-camera></a-camera>
+
+</a-scene>
+<img src="assets/images/buttons_PNG40.png" id="show" alt="Show model" class="showbtn" style="position: absolute; top: 10px; left: 10px; z-index: 10; width: 100px; cursor: pointer;">
+    
+
+
+<img src="assets/images/buttons_PNG40.png" id="hide" alt="Hide model" class="hidebtn" style="position: absolute; top: 50px; left: 10px; z-index: 10; width: 100px; cursor: pointer;">
+    
+<!-- AR.js Scene End-->
+
+<script>
+    const model=document.querySelector('#gltf-model');
+    document.getElementById('show').addEventListener('click', () => {
+        model.setAttribute('visible', true);
+        
+    } );
+
+    document.getElementById('hide').addEventListener('click', () => {
+        model.setAttribute('visible', false);
+    } );
+
+
+</script>
+
+</body>
+</html>

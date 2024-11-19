@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button click Multiple GLB Models</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <!-- Buttons to load different GLB models -->
+    <button id="load-model1-btn" style="position: absolute; top: 10px; left: 10px; z-index: 10;">
+        Chair 1
+    </button>
+    <button id="load-model2-btn" style="position: absolute; top: 50px; left: 10px; z-index: 10;">
+        Chair 2
+    </button>
+    <button id="load-model3-btn" style="position: absolute; top: 90px; left: 10px; z-index: 10;">
+        Chair 3
+    </button>
+
+    <a-scene
+        embedded
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    >
+        <!-- Add a static entity with GLB model -->
+        <a-entity
+            id="gltf-model"
+            gltf-model="assets/models/chair02.glb" 
+            scale="1 1 1"
+            position="0 0.4 -7"
+            rotation="10 15 0"
+            visible="false"
+        ></a-entity>
+
+        <a-camera></a-camera>
+    </a-scene>
+
+    <script>
+        // Select the GLB model entity
+        const model = document.querySelector('#gltf-model');
+
+        // Add event listener to load Model 1
+        document.getElementById('load-model1-btn').addEventListener('click', () => {
+            model.setAttribute('gltf-model', 'assets/models/chair02.glb');  // Load Model 1
+            model.setAttribute('visible', true);  
+            model.setAttribute('scale', '0.5 0.5 0.5');
+            // Ensure model is visible
+        });
+
+        // Add event listener to load Model 2
+        document.getElementById('load-model2-btn').addEventListener('click', () => {
+            model.setAttribute('gltf-model', 'assets/models/chair03.glb');  // Load Model 2
+            model.setAttribute('visible', true);  
+            model.setAttribute('scale', '0.5 0.5 0.5');
+            // Ensure model is visible
+        });
+
+        // Add event listener to load Model 2
+        document.getElementById('load-model3-btn').addEventListener('click', () => {
+            model.setAttribute('gltf-model', 'assets/models/chair04.glb');  // Load Model 3
+            model.setAttribute('visible', true);  
+            model.setAttribute('scale', '0.5 0.5 0.5');
+            // Ensure model is visible
+        });
+    </script>
+</body>
+</html>
